@@ -32,7 +32,8 @@ module WillPaginate
       :params         => nil,
       :renderer       => 'WillPaginate::LinkRenderer',
       :page_links     => true,
-      :container      => true
+      :container      => true,
+      :semantic       => false
     }
     mattr_reader :pagination_options
 
@@ -56,6 +57,7 @@ module WillPaginate
     # * <tt>:id</tt> -- HTML ID for the container (default: nil). Pass +true+ to have the ID
     #   automatically generated from the class name of objects in collection: for example, paginating
     #   ArticleComment models would yield an ID of "article_comments_pagination".
+    # * <tt>:semantic</tt> -- pagination links rendered with UL/LI tags
     #
     # Advanced options:
     # * <tt>:param_name</tt> -- parameter name for page number in URLs (default: <tt>:page</tt>)
@@ -101,6 +103,13 @@ module WillPaginate
       if options[:prev_label]
         WillPaginate::Deprecation::warn(":prev_label view parameter is now :previous_label; the old name has been deprecated", caller)
         options[:previous_label] = options.delete(:prev_label)
+      end
+
+      # semantic link rendering
+      if options[:semantic]
+        options[:renderer] = "WillPaginate::SemanticLinkRenderer"
+        options[:separator] = nil
+        options[:container] = true
       end
 
       # get the renderer instance
@@ -234,7 +243,8 @@ module WillPaginate
       links.push    page_link_or_span(@collection.next_page,     'disabled next_page', @options[:next_label])
 
       html = links.join(@options[:separator])
-      @options[:container] ? @template.content_tag(:div, html, html_attributes) : html
+      container_tag = @options[:semantic] ? :ul : :div
+      @options[:container] ? @template.content_tag(container_tag, html, html_attributes) : html
     end
 
     # Returns the subset of +options+ this instance was initialized with that
@@ -399,6 +409,23 @@ module WillPaginate
       else
         raise "unsupported ActionPack version"
       end
+    end
+  end
+
+  class SemanticLinkRenderer < LinkRenderer
+
+    def initialize
+      @gap_marker = '<li class="gap">&hellip;</li>'
+    end
+
+  protected
+    def page_link(page, text, attributes = {})
+      li_attributes = attributes.has_key?(:class) ? {:class => attributes[:class] } : {}
+      @template.content_tag(:li, @template.link_to(text, url_for(page), attributes), li_attributes)
+    end
+
+    def page_span(page, text, attributes = {})
+      @template.content_tag(:li, text, attributes)
     end
   end
 end

@@ -370,4 +370,26 @@ class ViewTest < WillPaginate::ViewTestCase
     end
   end
 
+  ## semantic pagination ##
+
+  def test_semantic
+    paginate([1].paginate({ :page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
+      assert_select 'li a[href]', 4 do |elements|
+        validate_page_numbers [2,3,4,2], elements
+        assert_select elements.last, ':last-child', "Next &raquo;"
+      end
+      assert_select 'li', 6
+      assert_select 'li.disabled.prev_page', '&laquo; Previous'
+      assert_select 'li.current', '1'
+      assert_select 'li a[rel=next]', '2'
+      assert_select 'li.next_page a.next_page[rel=next]', 'Next &raquo;'
+      assert_equal %Q(<ul class="pagination"><li class="disabled prev_page">&laquo; Previous</li><li class="current">1</li><li><a href="/foo/bar?page=2" rel="next">2</a></li><li><a href="/foo/bar?page=3">3</a></li><li><a href="/foo/bar?page=4">4</a></li><li class="next_page"><a href="/foo/bar?page=2" class="next_page" rel="next">Next &raquo;</a></li></ul>), @html_result
+    end
+  end
+
+  def test_semantic_gap
+    paginate([1].paginate({ :page => 2, :total_entries => 25, :per_page => 4 }), :inner_window => 1, :semantic => true) do |pagination|
+      assert_select 'li.gap', '&hellip;'
+    end
+  end
 end

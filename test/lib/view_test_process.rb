@@ -68,8 +68,9 @@ class WillPaginate::ViewTestCase < Test::Unit::TestCase
       @html_document = HTML::Document.new(@html_result, true, false)
 
       if block_given?
+        elementname = options[:semantic] ? 'ul' : 'div'
         classname = options[:class] || WillPaginate::ViewHelpers.pagination_options[:class]
-        assert_select("div.#{classname}", 1, 'no main DIV', &block)
+        assert_select("#{elementname}.#{classname}", 1, "no main #{elementname.upcase}", &block)
       end
     end
 
