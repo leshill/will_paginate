@@ -282,6 +282,56 @@ describe WillPaginate::ViewHelpers::ActionView do
     end
   end
 
+  describe "SemanticLinkRenderer" do
+
+    it "has the appropriate number of list items" do
+      paginate([1].paginate({:page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
+        assert_select 'li', 6
+      end
+
+    end
+
+    it "has valid page number links" do
+      paginate([1].paginate({:page => 2, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
+        assert_select 'li a[href]', 5 do |elements|
+          validate_page_numbers [1,1,3,4,3], elements
+          assert_select elements.first, ':last-child', "&#8592; Previous"
+          assert_select elements.last, ':last-child', "Next &#8594;"
+        end
+      end
+    end
+
+    it "identies the current list item" do
+      paginate([1].paginate({:page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
+        assert_select 'li.current', '1'
+      end
+    end
+
+    it "matches the expected markup" do
+      expected = <<-HTML
+        <ul class="pagination">
+         <li class="previous_page disabled">&#8592; Previous</li>
+         <li class="current">1</li>
+         <li><a href="/foo/bar?page=2" rel="next">2</a></li>
+         <li><a href="/foo/bar?page=3">3</a></li>
+         <li><a href="/foo/bar?page=4">4</a></li>
+         <li class="next_page"><a href="/foo/bar?page=2" class="next_page" rel="next">Next &#8594;</a></li>
+        </ul>
+      HTML
+
+      expected.strip!.gsub!(/\s{2,}/, '').gsub!(/\n/, '')
+      expected_dom = HTML::Document.new(expected).root
+      paginate([1].paginate({:page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true)
+      html_document.root.should == expected_dom
+    end
+
+    it "sets the gap as a list item" do
+      paginate([1].paginate({:page => 2, :total_entries => 25, :per_page => 4 }), :inner_window => 1, :semantic => true) do |pagination|
+        assert_select 'li.gap', '&hellip;'
+      end
+    end
+  end
+
   if ActionController::Base.respond_to? :rescue_responses
     # only on Rails 2
     it "should set rescue response hook" do

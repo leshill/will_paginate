@@ -22,6 +22,7 @@ module WillPaginate
       #   (eg. <tt>:controller => "foo", :action => nil</tt>)
       # * <tt>:renderer</tt> -- class name, class or instance of a link renderer (default:
       #   <tt>WillPaginate::LinkRenderer</tt>)
+      # * <tt>:semantic</tt> -- pagination links rendered with UL/LI tags
       # * <tt>:page_links</tt> -- when false, only previous/next links are rendered (default: true)
       # * <tt>:container</tt> -- toggles rendering of the DIV container for pagination links, set to
       #   false only when you are rendering your own pagination markup (default: true)
@@ -47,6 +48,13 @@ module WillPaginate
         if options[:prev_label]
           WillPaginate::Deprecation::warn(":prev_label view parameter is now :previous_label; the old name has been deprecated.")
           options[:previous_label] = options.delete(:prev_label)
+        end
+
+        #  semantic link rendering
+        if options[:semantic]
+          options[:renderer] = "WillPaginate::ViewHelpers::SemanticLinkRenderer"
+          options[:separator] = nil
+          options[:container] = true
         end
 
         # get the renderer instance

@@ -29,7 +29,8 @@ class ViewExampleGroup < Spec::Example::ExampleGroup
 
     if block_given?
       classname = options[:class] || WillPaginate::ViewHelpers.pagination_options[:class]
-      assert_select("div.#{classname}", 1, 'no main DIV', &block)
+      container_tag = options[:semantic] ? 'ul' : 'div'
+      assert_select("#{container_tag}.#{classname}", 1, "no main #{container_tag.upcase}", &block)
     end
 
     @render_output
