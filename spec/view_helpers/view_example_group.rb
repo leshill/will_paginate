@@ -9,13 +9,13 @@ end
 require 'action_controller/assertions/selector_assertions'
 
 class ViewExampleGroup < Spec::Example::ExampleGroup
-  
+
   include ActionController::Assertions::SelectorAssertions
-  
+
   def assert(value, message)
     raise message unless value
   end
-  
+
   def paginate(collection = {}, options = {}, &block)
     if collection.instance_of? Hash
       page_options = { :page => 1, :total_entries => 11, :per_page => 4 }.merge(collection)
@@ -26,26 +26,26 @@ class ViewExampleGroup < Spec::Example::ExampleGroup
 
     @render_output = render(locals)
     @html_document = nil
-    
+
     if block_given?
       classname = options[:class] || WillPaginate::ViewHelpers.pagination_options[:class]
       assert_select("div.#{classname}", 1, 'no main DIV', &block)
     end
-    
+
     @render_output
   end
-  
+
   def html_document
     @html_document ||= HTML::Document.new(@render_output, true, false)
   end
-  
+
   def response_from_page_or_rjs
     html_document.root
   end
-  
+
   def validate_page_numbers(expected, links, param_name = :page)
     param_pattern = /\W#{CGI.escape(param_name.to_s)}=([^&]*)/
-    
+
     links.map { |e|
       e['href'] =~ param_pattern
       $1 ? $1.to_i : $1
@@ -58,7 +58,7 @@ class ViewExampleGroup < Spec::Example::ExampleGroup
     end
 
     pages = [] if numbers
-    
+
     links.each do |el|
       el['href'].should =~ pattern
       if numbers
@@ -77,7 +77,7 @@ class ViewExampleGroup < Spec::Example::ExampleGroup
       end
     end
   end
-  
+
   def build_message(message, pattern, *args)
     built_message = pattern.dup
     for value in args
@@ -85,7 +85,7 @@ class ViewExampleGroup < Spec::Example::ExampleGroup
     end
     built_message
   end
-  
+
 end
 
 Spec::Example::ExampleGroupFactory.register(:view_helpers, ViewExampleGroup)
@@ -96,7 +96,7 @@ module HTML
       children.map(&:inner_text).join('')
     end
   end
-  
+
   Text.class_eval do
     def inner_text
       self.to_s

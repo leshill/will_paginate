@@ -7,7 +7,7 @@ module WillPaginate
   # for the given collection. The helper itself is lightweight and serves only
   # as a wrapper around LinkRenderer instantiation; the renderer then does
   # all the hard work of generating the HTML.
-  # 
+  #
   # Read more in WillPaginate::ViewHelpers::Base
   module ViewHelpers
     # ==== Global options for helpers
@@ -24,7 +24,7 @@ module WillPaginate
     def self.pagination_options() @pagination_options; end
     # Overrides the default +pagination_options+
     def self.pagination_options=(value) @pagination_options = value; end
-    
+
     self.pagination_options = {
       :class          => 'pagination',
       :previous_label => '&#8592; Previous',

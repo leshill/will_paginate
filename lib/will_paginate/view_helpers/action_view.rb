@@ -6,10 +6,10 @@ require 'will_paginate/view_helpers/link_renderer'
 module WillPaginate
   module ViewHelpers
     # = ActionView helpers
-    # 
+    #
     # This module serves for availability in ActionView templates. It also adds a new
     # view helper: +paginated_section+.
-    # 
+    #
     # == Using the helper without arguments
     # If the helper is called without passing in the collection object, it will
     # try to read from the instance variable inferred by the controller name.
@@ -25,24 +25,24 @@ module WillPaginate
     #
     module ActionView
       include WillPaginate::ViewHelpers::Base
-      
+
       def will_paginate(collection = nil, options = {}) #:nodoc:
         options, collection = collection, nil if collection.is_a? Hash
         collection ||= infer_collection_from_controller
 
         super(collection, options.symbolize_keys)
       end
-      
+
       def page_entries_info(collection = nil, options = {}) #:nodoc:
         options, collection = collection, nil if collection.is_a? Hash
         collection ||= infer_collection_from_controller
-        
+
         super(collection, options.symbolize_keys)
       end
-      
+
       # Wrapper for rendering pagination links at both top and bottom of a block
       # of content.
-      # 
+      #
       #   <% paginated_section @posts do %>
       #     <ol id="posts">
       #       <% for post in @posts %>
@@ -64,7 +64,7 @@ module WillPaginate
       # blocks of pagination links sharing the same ID (which is invalid HTML).
       def paginated_section(*args, &block)
         pagination = will_paginate(*args).to_s
-        
+
         unless ::ActionView::Base.respond_to? :erb_variable
           concat pagination
           yield
@@ -74,7 +74,7 @@ module WillPaginate
           concat(content, block.binding)
         end
       end
-      
+
     protected
 
       def infer_collection_from_controller
@@ -96,35 +96,35 @@ end
 
 WillPaginate::ViewHelpers::LinkRenderer.class_eval do
   protected
-  
+
   def default_url_params
     { :escape => false }
   end
-  
+
   def url(page)
     @base_url_params ||= begin
       url_params = base_url_params
       merge_optional_params(url_params)
       url_params
     end
-    
+
     url_params = @base_url_params.dup
     add_current_page_param(url_params, page)
-    
+
     @template.url_for(url_params)
   end
-  
+
   def base_url_params
     url_params = default_url_params
     # page links should preserve GET parameters
     symbolized_update(url_params, @template.params) if get_request?
     url_params
   end
-  
+
   def merge_optional_params(url_params)
     symbolized_update(url_params, @options[:params]) if @options[:params]
   end
-  
+
   def add_current_page_param(url_params, page)
     unless param_name.index(/[^\w-]/)
       url_params[param_name.to_sym] = page
@@ -133,13 +133,13 @@ WillPaginate::ViewHelpers::LinkRenderer.class_eval do
       symbolized_update(url_params, page_param)
     end
   end
-  
+
   def get_request?
     @template.request.get?
   end
-  
+
   private
-  
+
   def parse_query_parameters(params)
     if defined? Rack::Utils
       # For Rails > 2.3
