@@ -284,9 +284,14 @@ describe WillPaginate::ViewHelpers::ActionView do
 
   describe "SemanticLinkRenderer" do
 
+    it "does not include a ul when :container is not false" do
+      paginate([1].paginate({:page => 1, :total_entries => 13, :per_page => 4 }), :container => false, :semantic => true)
+      assert_select 'ul li', false
+    end
+
     it "has the appropriate number of list items" do
       paginate([1].paginate({:page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
-        assert_select 'li', 6
+        assert_select 'ul li', 6
       end
 
     end

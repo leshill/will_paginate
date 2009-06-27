@@ -54,7 +54,6 @@ module WillPaginate
         if options[:semantic]
           options[:renderer] = "WillPaginate::ViewHelpers::SemanticLinkRenderer"
           options[:separator] = nil
-          options[:container] = true
         end
 
         # get the renderer instance
