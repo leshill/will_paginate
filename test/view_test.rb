@@ -372,13 +372,18 @@ class ViewTest < WillPaginate::ViewTestCase
 
   ## semantic pagination ##
 
+  def test_semantic_container
+    paginate([1].paginate({ :page => 1, :total_entries => 13, :per_page => 4 }), :container => false, :semantic => true)
+    assert_select('ul li', false)
+  end
+
   def test_semantic
     paginate([1].paginate({ :page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
       assert_select 'li a[href]', 4 do |elements|
         validate_page_numbers [2,3,4,2], elements
         assert_select elements.last, ':last-child', "Next &raquo;"
       end
-      assert_select 'li', 6
+      assert_select 'ul li', 6
       assert_select 'li.disabled.prev_page', '&laquo; Previous'
       assert_select 'li.current', '1'
       assert_select 'li a[rel=next]', '2'
