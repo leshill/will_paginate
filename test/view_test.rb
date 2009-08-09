@@ -377,6 +377,11 @@ class ViewTest < WillPaginate::ViewTestCase
     assert_select('ul li', false)
   end
 
+  def test_specified_semantic_container
+    paginate([1].paginate({ :page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true, :semantic_container => :ol)
+    assert_select('ol li', true)
+  end
+
   def test_semantic
     paginate([1].paginate({ :page => 1, :total_entries => 13, :per_page => 4 }), :semantic => true) do |pagination|
       assert_select 'li a[href]', 4 do |elements|

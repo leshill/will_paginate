@@ -33,7 +33,8 @@ module WillPaginate
       :renderer       => 'WillPaginate::LinkRenderer',
       :page_links     => true,
       :container      => true,
-      :semantic       => false
+      :semantic       => false,
+      :semantic_container => :ul
     }
     mattr_reader :pagination_options
 
@@ -57,7 +58,8 @@ module WillPaginate
     # * <tt>:id</tt> -- HTML ID for the container (default: nil). Pass +true+ to have the ID
     #   automatically generated from the class name of objects in collection: for example, paginating
     #   ArticleComment models would yield an ID of "article_comments_pagination".
-    # * <tt>:semantic</tt> -- pagination links rendered with UL/LI tags
+    # * <tt>:semantic</tt> -- semantic pagination render, defaults to false
+    # * <tt>:semantic_container</tt> -- container for li elements, defaults to :ul
     #
     # Advanced options:
     # * <tt>:param_name</tt> -- parameter name for page number in URLs (default: <tt>:page</tt>)
@@ -242,7 +244,7 @@ module WillPaginate
       links.push    page_link_or_span(@collection.next_page,     'disabled next_page', @options[:next_label])
 
       html = links.join(@options[:separator])
-      container_tag = @options[:semantic] ? :ul : :div
+      container_tag = @options[:semantic] ? @options[:semantic_container] : :div
       @options[:container] ? @template.content_tag(container_tag, html, html_attributes) : html
     end
 
