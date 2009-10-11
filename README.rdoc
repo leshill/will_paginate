@@ -1,3 +1,7 @@
+= NOTE
+
+This fork is available as leshill-will_paginate on {Gemcutter}[http://gemcutter.org]
+
 = WillPaginate
 
 Pagination is just limiting the number of records displayed. Why should you let

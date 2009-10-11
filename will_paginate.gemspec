@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
-  s.name    = 'will_paginate'
+  s.name    = 'leshill-will_paginate'
   s.version = '2.3.11'
-  s.date    = '2009-08-08'
+  s.date    = '2009-10-11'
 
-  s.summary = "Most awesome pagination solution for Rails"
+  s.summary = "Fork of the Most awesome pagination solution for Rails"
   s.description = "The will_paginate library provides a simple, yet powerful and extensible API for ActiveRecord pagination and rendering of pagination links in ActionView templates."
 
-  s.authors  = ['Mislav Marohnić', 'PJ Hyett']
-  s.email    = 'mislav.marohnic@gmail.com'
-  s.homepage = 'http://github.com/mislav/will_paginate/wikis'
+  s.authors  = ['Les Hill', 'Mislav Marohnić', 'PJ Hyett']
+  s.email    = 'leshill@gmail.com'
+  s.homepage = 'http://github.com/leshill/will_paginate'
 
   s.has_rdoc = true
   s.rdoc_options = ['--main', 'README.rdoc']
